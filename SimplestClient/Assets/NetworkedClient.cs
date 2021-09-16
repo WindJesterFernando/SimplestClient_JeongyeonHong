@@ -26,8 +26,11 @@ public class NetworkedClient : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.S))
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            Debug.Log("Push Key");
             SendMessageToHost("Hello from client");
+        }
 
         UpdateNetworkConnection();
     }
@@ -86,6 +89,7 @@ public class NetworkedClient : MonoBehaviour
                 isConnected = true;
 
                 Debug.Log("Connected, id = " + connectionID);
+                //SendMessageToHost("Hello from client");
 
             }
         }
