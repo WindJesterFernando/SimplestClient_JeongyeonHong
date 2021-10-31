@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 using UnityEngine.Networking;
-
+using UnityEngine.UI;
 public class NetworkedClient : MonoBehaviour
 {
 
@@ -16,23 +16,26 @@ public class NetworkedClient : MonoBehaviour
     byte error;
     bool isConnected = false;
     int ourClientID;
+    string[] m_Msg = new string[3];
+    public Text m_ChatText = null;
 
     // Start is called before the first frame update
     void Start()
     {
+        m_Msg[0] = "Hello";
+        m_Msg[1] = "GG";
+        m_Msg[2] = "I have a cute cat";
+
         Connect();
+
+        //StartCoroutine("UpdateNetworkConnection");
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.S))
-        {
-            Debug.Log("Push Key");
-            SendMessageToHost("Hello from client");
-        }
-
         UpdateNetworkConnection();
+
     }
 
     private void UpdateNetworkConnection()
@@ -108,7 +111,13 @@ public class NetworkedClient : MonoBehaviour
 
     private void ProcessRecievedMsg(string msg, int id)
     {
-        Debug.Log("msg recieved = " + msg + ".  connection id = " + id);
+        //Debug.Log("msg recieved = " + msg + ".  connection id = " + id);
+        if (msg != "Owner")
+            m_ChatText.text += id + " : " + msg + "\n";
+
+        int Index = Random.Range(0, 3);
+
+        SendMessageToHost(m_Msg[Index]);
     }
 
     public bool IsConnected()
