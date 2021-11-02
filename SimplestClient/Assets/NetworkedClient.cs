@@ -19,9 +19,19 @@ public class NetworkedClient : MonoBehaviour
     string[] m_Msg = new string[3];
     public Text m_ChatText = null;
 
+    GameObject gameSystemManager;
+
     // Start is called before the first frame update
     void Start()
     {
+        GameObject[] allObjects = UnityEngine.Object.FindObjectsOfType<GameObject>();
+
+        foreach (GameObject go in allObjects)
+        {
+            if (go.GetComponent<GameSystemManager>() != null)
+                gameSystemManager = go;
+        }
+
         m_Msg[0] = "Hello";
         m_Msg[1] = "GG";
         m_Msg[2] = "I have a cute cat";
@@ -118,6 +128,27 @@ public class NetworkedClient : MonoBehaviour
         int Index = Random.Range(0, 3);
 
         SendMessageToHost(m_Msg[Index]);
+
+        string[] csv = msg.Split(',');
+
+        int signifier = int.Parse(csv[0]);
+
+        if(signifier == ServerToClientSignifiers.AccountCreationComplete)
+        {
+            gameSystemManager.GetComponent<GameSystemManager>().ChangeState(GameStates.MainMenu);
+        }
+        else if(signifier == ServerToClientSignifiers.LoginComplete)
+        {
+            gameSystemManager.GetComponent<GameSystemManager>().ChangeState(GameStates.MainMenu);
+        }
+        else if (signifier == ServerToClientSignifiers.GameStart)
+        {
+            gameSystemManager.GetComponent<GameSystemManager>().ChangeState(GameStates.TicTacToe);
+        }
+        else if (signifier == ServerToClientSignifiers.OpponentPlay)
+        {
+            Debug.Log("opponent play!");
+        }
     }
 
     public bool IsConnected()
@@ -132,6 +163,8 @@ static public class ClientToServerSignifiers
 {
     public const int CreateAccount = 1;
     public const int Login = 2;
+    public const int JoinQueueForGameRoom = 3;
+    public const int TicTacToeSomethingPlay = 4;
 }
 
 static public class ServerToClientSignifiers
@@ -140,4 +173,6 @@ static public class ServerToClientSignifiers
     public const int LoginFailed = 2;
     public const int AccountCreationComplete = 3;
     public const int AccountCreationFailed = 4;
+    public const int OpponentPlay = 5;
+    public const int GameStart = 6;
 }
