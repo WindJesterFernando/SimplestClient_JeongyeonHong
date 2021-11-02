@@ -127,3 +127,17 @@ public class NetworkedClient : MonoBehaviour
 
 
 }
+
+static public class ClientToServerSignifiers
+{
+    public const int CreateAccount = 1;
+    public const int Login = 2;
+}
+
+static public class ServerToClientSignifiers
+{
+    public const int LoginComplete = 1;
+    public const int LoginFailed = 2;
+    public const int AccountCreationComplete = 3;
+    public const int AccountCreationFailed = 4;
+}
