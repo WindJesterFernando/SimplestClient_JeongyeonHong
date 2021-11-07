@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class GameSystemManager : MonoBehaviour
 {
-    GameObject submitButton, userNameInput, passwordInput, createToggle, loginToggle;
+    GameObject submitButton, userNameInput, passwordInput, createToggle, loginToggle, observerToggle;
 
 
     GameObject networkedClient;
@@ -16,6 +16,8 @@ public class GameSystemManager : MonoBehaviour
 
     GameObject TicTacToeSquareButton;
 
+    public string m_ID;
+    public string m_Password;
     //static GameObject instance;
 
     void Start()
@@ -37,7 +39,7 @@ public class GameSystemManager : MonoBehaviour
                 createToggle = go;
             else if (go.name == "LoginToggle")
                 loginToggle = go;
-            else if (go.name == "NettowkredClient")
+            else if (go.name == "NetworkedClient")
                 networkedClient = go;
             else if (go.name == "JoinGameRoomButton")
                 joinGameRoomButton = go;
@@ -47,17 +49,22 @@ public class GameSystemManager : MonoBehaviour
                 textPasswordInfo = go;
             else if (go.name == "TicTacToeSquareButton")
                 TicTacToeSquareButton = go;
+            else if (go.name == "ObserverToggle")
+                observerToggle = go;
         }
 
         submitButton.GetComponent<Button>().onClick.AddListener(SubmitButtonPressed);
 
         loginToggle.GetComponent<Toggle>().onValueChanged.AddListener(LoginToggleChanged);
         createToggle.GetComponent<Toggle>().onValueChanged.AddListener(CreateToggleChanged);
+        observerToggle.GetComponent<Toggle>().onValueChanged.AddListener(ObserverToggleChanged);
 
         joinGameRoomButton.GetComponent<Button>().onClick.AddListener(JoinGameRoomButtonPressed);
         TicTacToeSquareButton.GetComponent<Button>().onClick.AddListener(TicTacToeSquareButtonPressed);
 
         ChangeState(GameStates.LoginMenu);
+
+        DontDestroyOnLoad(gameObject);
     }
 
     // Update is called once per frame
@@ -68,15 +75,18 @@ public class GameSystemManager : MonoBehaviour
 
     public void SubmitButtonPressed()
     {
-        string p = passwordInput.GetComponent<InputField>().text;
-        string n = userNameInput.GetComponent<InputField>().text;
+        m_Password = passwordInput.GetComponent<InputField>().text;
+        m_ID = userNameInput.GetComponent<InputField>().text;
 
         string msg;
-        
-        if(createToggle.GetComponent<Toggle>().isOn)
-            msg = ClientToServerSignifiers.CreateAccount + ", " + n + ", " + p;
+
+        if (createToggle.GetComponent<Toggle>().isOn)
+            msg = ClientToServerSignifiers.CreateAccount + ", " + m_ID + ", " + m_Password;
+
         else
-            msg = ClientToServerSignifiers.Login + ", " + n + ", " + p;
+        {
+            msg = ClientToServerSignifiers.Login + ", " + m_ID + ", " + m_Password;
+        }
 
 
         networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(msg);
@@ -93,6 +103,13 @@ public class GameSystemManager : MonoBehaviour
     public void CreateToggleChanged(bool newValue)
     {
         loginToggle.GetComponent<Toggle>().SetIsOnWithoutNotify(!newValue);
+    }
+
+    public void ObserverToggleChanged(bool newValue)
+    {
+        //Debug.Log("yoyo");
+
+        observerToggle.GetComponent<Toggle>().SetIsOnWithoutNotify(!newValue);
     }
 
     public void ChangeState(int newState)
@@ -138,7 +155,12 @@ public class GameSystemManager : MonoBehaviour
 
     public void JoinGameRoomButtonPressed()
     {
-        networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerSignifiers.JoinQueueForGameRoom + "");
+        if (observerToggle.GetComponent<Toggle>().isOn)
+            networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerSignifiers.ObserverJoin + "");
+
+        else
+            networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerSignifiers.JoinQueueForGameRoom + "");
+
         ChangeState(GameStates.WaitingInQueueForOtherPlayer);
     }
 
