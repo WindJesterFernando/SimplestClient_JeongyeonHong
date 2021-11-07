@@ -4,9 +4,12 @@ using System.Text;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 public class NetworkedClient : MonoBehaviour
 {
 
+    int[] m_ConnectionID = new int[3];
+    int m_ConnectionCount = 0;
     int connectionID;
     int maxConnections = 1000;
     int reliableChannelID;
@@ -39,6 +42,8 @@ public class NetworkedClient : MonoBehaviour
         Connect();
 
         //StartCoroutine("UpdateNetworkConnection");
+
+        DontDestroyOnLoad(gameObject);
     }
 
     // Update is called once per frame
@@ -105,6 +110,12 @@ public class NetworkedClient : MonoBehaviour
                 //SendMessageToHost("Hello from client");
 
             }
+
+            else
+            {
+                m_ConnectionID[m_ConnectionCount] = connectionID;
+                ++m_ConnectionCount;
+            }
         }
     }
     
@@ -122,12 +133,12 @@ public class NetworkedClient : MonoBehaviour
     private void ProcessRecievedMsg(string msg, int id)
     {
         //Debug.Log("msg recieved = " + msg + ".  connection id = " + id);
-        if (msg != "Owner")
-            m_ChatText.text += id + " : " + msg + "\n";
+        //if (msg != "Owner")
+        //    m_ChatText.text += id + " : " + msg + "\n";
 
-        int Index = Random.Range(0, 3);
+        //int Index = Random.Range(0, 3);
 
-        SendMessageToHost(m_Msg[Index]);
+        //SendMessageToHost(m_Msg[Index]);
 
         string[] csv = msg.Split(',');
 
@@ -143,11 +154,48 @@ public class NetworkedClient : MonoBehaviour
         }
         else if (signifier == ServerToClientSignifiers.GameStart)
         {
-            gameSystemManager.GetComponent<GameSystemManager>().ChangeState(GameStates.TicTacToe);
+            //gameSystemManager.GetComponent<GameSystemManager>().ChangeState(GameStates.TicTacToe);
+
+            SceneManager.LoadScene("Main");
         }
         else if (signifier == ServerToClientSignifiers.OpponentPlay)
         {
             Debug.Log("opponent play!");
+        }
+        else if (signifier == ServerToClientSignifiers.Msg)
+        {
+            Text ChatText = GameObject.Find("ChatText").GetComponent<Text>();
+
+            if (ChatText)
+                ChatText.text += csv[1] + "\n";
+
+            int Index = Random.Range(0, 3);
+
+            GameSystemManager Mgr = gameSystemManager.GetComponent<GameSystemManager>();
+            string ChatMsg = Mgr.m_ID + " : " + m_Msg[Index];
+
+            SendMessageToHost(ClientToServerSignifiers.TicTacToeSomethingPlay + ", " + ChatMsg);
+
+            if (ChatText)
+            {
+                ChatText.text += ClientToServerSignifiers.TicTacToeSomethingPlay + ", " + Mgr.m_ID + " : " + m_Msg[Index] + "\n";
+            }
+        }
+        else if (signifier == ServerToClientSignifiers.Owner)
+        {
+            int Index = Random.Range(0, 3);
+
+            GameSystemManager Mgr = gameSystemManager.GetComponent<GameSystemManager>();
+            string ChatMsg = Mgr.m_ID + " : " + m_Msg[Index];
+
+            SendMessageToHost(ClientToServerSignifiers.TicTacToeSomethingPlay + ", " + ChatMsg);
+
+            Text ChatText = GameObject.Find("ChatText").GetComponent<Text>();
+
+            if (ChatText)
+            {
+                ChatText.text += ClientToServerSignifiers.TicTacToeSomethingPlay + ", " + Mgr.m_ID + " : " + m_Msg[Index] + "\n";
+            }
         }
     }
 
@@ -165,6 +213,7 @@ static public class ClientToServerSignifiers
     public const int Login = 2;
     public const int JoinQueueForGameRoom = 3;
     public const int TicTacToeSomethingPlay = 4;
+    public const int ObserverJoin = 5;
 }
 
 static public class ServerToClientSignifiers
@@ -175,4 +224,6 @@ static public class ServerToClientSignifiers
     public const int AccountCreationFailed = 4;
     public const int OpponentPlay = 5;
     public const int GameStart = 6;
+    public const int Msg = 7;
+    public const int Owner = 8;
 }
