@@ -183,5 +183,7 @@ public class TicTacToe : MonoBehaviour
         TextArray[Number].text = "X";
         IsClicked[Number] = true;
         Turn = true;
+
+        Debug.Log("Change Number : " + Number);
     }
 }
