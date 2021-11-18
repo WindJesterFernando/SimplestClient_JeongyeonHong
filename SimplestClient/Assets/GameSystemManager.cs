@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class GameSystemManager : MonoBehaviour
 {
-    GameObject submitButton, userNameInput, passwordInput, createToggle, loginToggle, observerToggle;
+    GameObject submitButton, userNameInput, passwordInput, observerToggle;
 
 
     GameObject networkedClient;
@@ -35,10 +35,6 @@ public class GameSystemManager : MonoBehaviour
                 passwordInput = go;
             else if (go.name == "SubmitButton")
                 submitButton = go;
-            else if (go.name == "CreateToggle")
-                createToggle = go;
-            else if (go.name == "LoginToggle")
-                loginToggle = go;
             else if (go.name == "NetworkedClient")
                 networkedClient = go;
             else if (go.name == "JoinGameRoomButton")
@@ -55,14 +51,10 @@ public class GameSystemManager : MonoBehaviour
 
         submitButton.GetComponent<Button>().onClick.AddListener(SubmitButtonPressed);
 
-        loginToggle.GetComponent<Toggle>().onValueChanged.AddListener(LoginToggleChanged);
-        createToggle.GetComponent<Toggle>().onValueChanged.AddListener(CreateToggleChanged);
         observerToggle.GetComponent<Toggle>().onValueChanged.AddListener(ObserverToggleChanged);
 
         joinGameRoomButton.GetComponent<Button>().onClick.AddListener(JoinGameRoomButtonPressed);
         TicTacToeSquareButton.GetComponent<Button>().onClick.AddListener(TicTacToeSquareButtonPressed);
-
-        ChangeState(GameStates.LoginMenu);
 
         DontDestroyOnLoad(gameObject);
     }
@@ -80,31 +72,11 @@ public class GameSystemManager : MonoBehaviour
 
         string msg;
 
-        if (createToggle.GetComponent<Toggle>().isOn)
-            msg = ClientToServerSignifiers.CreateAccount + ", " + m_ID + ", " + m_Password;
-
-        else
-        {
-            msg = ClientToServerSignifiers.Login + ", " + m_ID + ", " + m_Password;
-        }
-
+        msg = ClientToServerSignifiers.CreateAccount + ", " + m_ID + ", " + m_Password;
 
         networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(msg);
         Debug.Log(msg);
     }
-
-    public void LoginToggleChanged(bool newValue)
-    {
-        //Debug.Log("yoyo");
-
-        createToggle.GetComponent<Toggle>().SetIsOnWithoutNotify(!newValue);
-    }
-
-    public void CreateToggleChanged(bool newValue)
-    {
-        loginToggle.GetComponent<Toggle>().SetIsOnWithoutNotify(!newValue);
-    }
-
     public void ObserverToggleChanged(bool newValue)
     {
         //Debug.Log("yoyo");
@@ -112,69 +84,27 @@ public class GameSystemManager : MonoBehaviour
         observerToggle.GetComponent<Toggle>().SetIsOnWithoutNotify(!newValue);
     }
 
-    public void ChangeState(int newState)
-    {
-        submitButton.SetActive(false);
-        userNameInput.SetActive(false);
-        passwordInput.SetActive(false);
-        createToggle.SetActive(false);
-        loginToggle.SetActive(false);
-
-        textNameInfo.SetActive(false);
-        textPasswordInfo.SetActive(false);
-
-        joinGameRoomButton.SetActive(false);
-
-        TicTacToeSquareButton.SetActive(false);
-
-        if (newState == GameStates.LoginMenu)
-        {
-            submitButton.SetActive(true);
-            userNameInput.SetActive(true);
-            passwordInput.SetActive(true);
-            createToggle.SetActive(true);
-            loginToggle.SetActive(true);
-
-            textNameInfo.SetActive(true);
-            textPasswordInfo.SetActive(true);
-        }
-        else if(newState == GameStates.MainMenu)
-        {
-            joinGameRoomButton.SetActive(true);
-        }
-        else if (newState == GameStates.WaitingInQueueForOtherPlayer)
-        {
-            //back button could be a thing
-        }
-        else if (newState == GameStates.TicTacToe)
-        {
-            //set tic tac toe game board UI stuffs to active
-            TicTacToeSquareButton.SetActive(true);
-        }
-    }
-
     public void JoinGameRoomButtonPressed()
     {
+        m_Password = passwordInput.GetComponent<InputField>().text;
+        m_ID = userNameInput.GetComponent<InputField>().text;
+
         if (observerToggle.GetComponent<Toggle>().isOn)
-            networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerSignifiers.ObserverJoin + "");
+            networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerSignifiers.ObserverLogin + ", " + m_ID + ", " + m_Password);
 
         else
-            networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerSignifiers.JoinQueueForGameRoom + "");
-
-        ChangeState(GameStates.WaitingInQueueForOtherPlayer);
+            networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerSignifiers.Login + ", " + m_ID + ", " + m_Password);
     }
 
     public void TicTacToeSquareButtonPressed()
     {
+        m_Password = passwordInput.GetComponent<InputField>().text;
+        m_ID = userNameInput.GetComponent<InputField>().text;
 
-        networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerSignifiers.TicTacToeSomethingPlay + "");
+        if (observerToggle.GetComponent<Toggle>().isOn)
+            networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerSignifiers.TicTacToeObserverIn + ", " + m_ID + ", " + m_Password);
+
+        else
+            networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerSignifiers.TicTacToeIn + ", " + m_ID + ", " + m_Password);
     }
-}
-
-static public class GameStates
-{
-    public const int LoginMenu = 1;
-    public const int MainMenu = 2;
-    public const int WaitingInQueueForOtherPlayer = 3;
-    public const int TicTacToe = 4;
 }
