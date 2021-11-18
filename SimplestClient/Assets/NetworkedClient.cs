@@ -21,6 +21,7 @@ public class NetworkedClient : MonoBehaviour
     int ourClientID;
     string[] m_Msg = new string[3];
     public Text m_ChatText = null;
+    public TicTacToe m_TicTacToe = null;
 
     GameObject gameSystemManager;
 
@@ -144,58 +145,61 @@ public class NetworkedClient : MonoBehaviour
 
         int signifier = int.Parse(csv[0]);
 
-        if(signifier == ServerToClientSignifiers.AccountCreationComplete)
+        if (signifier == ServerToClientSignifiers.AccountCreationComplete)
         {
-            gameSystemManager.GetComponent<GameSystemManager>().ChangeState(GameStates.MainMenu);
         }
-        else if(signifier == ServerToClientSignifiers.LoginComplete)
+
+        else if (signifier == ServerToClientSignifiers.AccountCreationFailed)
         {
-            gameSystemManager.GetComponent<GameSystemManager>().ChangeState(GameStates.MainMenu);
         }
+
+        else if (signifier == ServerToClientSignifiers.LoginComplete)
+        {
+            SceneManager.LoadScene("Chat");
+        }
+
+        else if (signifier == ServerToClientSignifiers.LoginFailed)
+        {
+        }
+
         else if (signifier == ServerToClientSignifiers.GameStart)
         {
-            //gameSystemManager.GetComponent<GameSystemManager>().ChangeState(GameStates.TicTacToe);
-
-            SceneManager.LoadScene("Main");
         }
-        else if (signifier == ServerToClientSignifiers.OpponentPlay)
+
+        else if (signifier == ServerToClientSignifiers.ChatMsg)
         {
-            Debug.Log("opponent play!");
+            if (m_ChatText)
+                m_ChatText.text += csv[1] + "\n";
         }
-        else if (signifier == ServerToClientSignifiers.Msg)
+
+        else if (signifier == ServerToClientSignifiers.TicTacToePlay)
         {
-            Text ChatText = GameObject.Find("ChatText").GetComponent<Text>();
+            int Number = int.Parse(csv[1]);
 
-            if (ChatText)
-                ChatText.text += csv[1] + "\n";
+            if (m_TicTacToe)
+                m_TicTacToe.ChangeNumber(Number);
+        }
 
-            int Index = Random.Range(0, 3);
-
-            GameSystemManager Mgr = gameSystemManager.GetComponent<GameSystemManager>();
-            string ChatMsg = Mgr.m_ID + " : " + m_Msg[Index];
-
-            SendMessageToHost(ClientToServerSignifiers.TicTacToeSomethingPlay + ", " + ChatMsg);
-
-            if (ChatText)
+        else if (signifier == ServerToClientSignifiers.TicTacToeOwner)
+        {
+            if (m_TicTacToe)
             {
-                ChatText.text += ClientToServerSignifiers.TicTacToeSomethingPlay + ", " + Mgr.m_ID + " : " + m_Msg[Index] + "\n";
+                m_TicTacToe.SetOwner();
             }
         }
-        else if (signifier == ServerToClientSignifiers.Owner)
+
+
+        else if (signifier == ServerToClientSignifiers.TicTacToeWin)
         {
-            int Index = Random.Range(0, 3);
+        }
 
-            GameSystemManager Mgr = gameSystemManager.GetComponent<GameSystemManager>();
-            string ChatMsg = Mgr.m_ID + " : " + m_Msg[Index];
+        else if (signifier == ServerToClientSignifiers.TicTacToeLoginComplete)
+        {
+            SceneManager.LoadScene("TicTacToe");
+        }
 
-            SendMessageToHost(ClientToServerSignifiers.TicTacToeSomethingPlay + ", " + ChatMsg);
-
-            Text ChatText = GameObject.Find("ChatText").GetComponent<Text>();
-
-            if (ChatText)
-            {
-                ChatText.text += ClientToServerSignifiers.TicTacToeSomethingPlay + ", " + Mgr.m_ID + " : " + m_Msg[Index] + "\n";
-            }
+        else if (signifier == ServerToClientSignifiers.TicTacToeLoginFailed)
+        {
         }
     }
 
@@ -211,9 +215,14 @@ static public class ClientToServerSignifiers
 {
     public const int CreateAccount = 1;
     public const int Login = 2;
-    public const int JoinQueueForGameRoom = 3;
+    public const int ChatMsg = 3;
     public const int TicTacToeSomethingPlay = 4;
-    public const int ObserverJoin = 5;
+    public const int ObserverLogin = 5;
+    public const int ChatBack = 6;
+    public const int TicTacToeIn = 7;
+    public const int TicTacToeOut = 8;
+    public const int TicTacToeObserverIn = 9;
+    public const int TicTacToeObserverOut = 10;
 }
 
 static public class ServerToClientSignifiers
@@ -222,8 +231,12 @@ static public class ServerToClientSignifiers
     public const int LoginFailed = 2;
     public const int AccountCreationComplete = 3;
     public const int AccountCreationFailed = 4;
-    public const int OpponentPlay = 5;
-    public const int GameStart = 6;
-    public const int Msg = 7;
-    public const int Owner = 8;
+    public const int GameStart = 5;
+    public const int ChatMsg = 6;
+    public const int TicTacToePlay = 7;
+    public const int TicTacToeGameStart = 8;
+    public const int TicTacToeOwner = 9;
+    public const int TicTacToeWin = 10;
+    public const int TicTacToeLoginComplete = 11;
+    public const int TicTacToeLoginFailed = 12;
 }
