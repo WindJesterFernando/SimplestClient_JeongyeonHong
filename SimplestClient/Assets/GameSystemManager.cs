@@ -101,6 +101,8 @@ public class GameSystemManager : MonoBehaviour
         m_Password = passwordInput.GetComponent<InputField>().text;
         m_ID = userNameInput.GetComponent<InputField>().text;
 
+        Debug.Log("ID : " + m_ID + " Pass : " + m_Password);
+
         if (observerToggle.GetComponent<Toggle>().isOn)
             networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerSignifiers.TicTacToeObserverIn + ", " + m_ID + ", " + m_Password);
 

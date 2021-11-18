@@ -169,22 +169,36 @@ public class NetworkedClient : MonoBehaviour
         else if (signifier == ServerToClientSignifiers.ChatMsg)
         {
             if (m_ChatText)
+            {
+                Debug.Log("ID 1");
                 m_ChatText.text += csv[1] + "\n";
+            }
         }
 
         else if (signifier == ServerToClientSignifiers.TicTacToePlay)
         {
+            Debug.Log("TicTacToe");
             int Number = int.Parse(csv[1]);
 
-            if (m_TicTacToe)
-                m_TicTacToe.ChangeNumber(Number);
+            TicTacToe Tic = GameObject.Find("Canvas").GetComponent<TicTacToe>();
+
+            if (Tic)
+            {
+                Tic.ChangeNumber(Number);
+            }
+        }
+
+        else if (signifier == ServerToClientSignifiers.TicTacToeGameStart)
+        {
         }
 
         else if (signifier == ServerToClientSignifiers.TicTacToeOwner)
         {
-            if (m_TicTacToe)
+            TicTacToe Tic = GameObject.Find("Canvas").GetComponent<TicTacToe>();
+
+            if (Tic)
             {
-                m_TicTacToe.SetOwner();
+                Tic.SetOwner();
             }
         }
 
@@ -195,6 +209,7 @@ public class NetworkedClient : MonoBehaviour
 
         else if (signifier == ServerToClientSignifiers.TicTacToeLoginComplete)
         {
+            Debug.Log("Login Complete");
             SceneManager.LoadScene("TicTacToe");
         }
 
