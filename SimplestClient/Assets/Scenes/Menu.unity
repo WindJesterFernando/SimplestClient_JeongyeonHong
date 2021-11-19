@@ -1261,6 +1261,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_ID: 
   m_Password: 
+  m_TicTacToeClick: 0
 --- !u!4 &874754518
 Transform:
   m_ObjectHideFlags: 0
