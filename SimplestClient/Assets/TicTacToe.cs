@@ -9,6 +9,7 @@ public class TicTacToe : MonoBehaviour
     public Text[] TextArray;
     public bool[] IsClicked = new bool[9];
     private bool Turn = false;
+    private bool Observer = false;
     GameObject networkClient;
 
     public void SetOwner()
@@ -34,6 +35,8 @@ public class TicTacToe : MonoBehaviour
                 break;
             }
         }
+
+        Observer = networkClient.GetComponent<NetworkedClient>().m_Observer;
     }
 
     // Update is called once per frame
@@ -44,6 +47,9 @@ public class TicTacToe : MonoBehaviour
 
     public void Button1Click()
     {
+        if (Observer)
+            return;
+
         if (IsClicked[0] || !Turn)
             return;
 
@@ -59,6 +65,9 @@ public class TicTacToe : MonoBehaviour
     }
     public void Button2Click()
     {
+        if (Observer)
+            return;
+
         if (IsClicked[1] || !Turn)
             return;
 
@@ -74,6 +83,9 @@ public class TicTacToe : MonoBehaviour
     }
     public void Button3Click()
     {
+        if (Observer)
+            return;
+
         if (IsClicked[2] || !Turn)
             return;
 
@@ -89,6 +101,9 @@ public class TicTacToe : MonoBehaviour
     }
     public void Button4Click()
     {
+        if (Observer)
+            return;
+
         if (IsClicked[3] || !Turn)
             return;
 
@@ -104,6 +119,9 @@ public class TicTacToe : MonoBehaviour
     }
     public void Button5Click()
     {
+        if (Observer)
+            return;
+
         if (IsClicked[4] || !Turn)
             return;
 
@@ -119,6 +137,9 @@ public class TicTacToe : MonoBehaviour
     }
     public void Button6Click()
     {
+        if (Observer)
+            return;
+
         if (IsClicked[5] || !Turn)
             return;
 
@@ -134,6 +155,9 @@ public class TicTacToe : MonoBehaviour
     }
     public void Button7Click()
     {
+        if (Observer)
+            return;
+
         if (IsClicked[6] || !Turn)
             return;
 
@@ -149,6 +173,9 @@ public class TicTacToe : MonoBehaviour
     }
     public void Button8Click()
     {
+        if (Observer)
+            return;
+
         if (IsClicked[7] || !Turn)
             return;
 
@@ -164,6 +191,9 @@ public class TicTacToe : MonoBehaviour
     }
     public void Button9Click()
     {
+        if (Observer)
+            return;
+
         if (IsClicked[8] || !Turn)
             return;
 
@@ -178,9 +208,9 @@ public class TicTacToe : MonoBehaviour
         networkClient.GetComponent<NetworkedClient>().SendMessageToHost(msg);
     }
 
-    public void ChangeNumber(int Number)
+    public void ChangeNumber(int Number, string changeText)
     {
-        TextArray[Number].text = "X";
+        TextArray[Number].text = changeText;
         IsClicked[Number] = true;
         Turn = true;
 

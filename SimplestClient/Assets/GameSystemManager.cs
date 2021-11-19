@@ -77,7 +77,10 @@ public class GameSystemManager : MonoBehaviour
     }
     public void ObserverToggleChanged(bool newValue)
     {
-        observerToggle.GetComponent<Toggle>().SetIsOnWithoutNotify(!newValue);
+        //Debug.Log("Ob : " + !newValue);
+
+        observerToggle.GetComponent<Toggle>().isOn = newValue;
+        //observerToggle.GetComponent<Toggle>().SetIsOnWithoutNotify(!newValue);
     }
 
     public void JoinGameRoomButtonPressed()

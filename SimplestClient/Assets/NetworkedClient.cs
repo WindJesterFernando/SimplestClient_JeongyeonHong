@@ -22,6 +22,7 @@ public class NetworkedClient : MonoBehaviour
     string[] m_Msg = new string[3];
     public Text m_ChatText = null;
     public TicTacToe m_TicTacToe = null;
+    public bool m_Observer = false;
 
     GameObject gameSystemManager;
 
@@ -169,11 +170,21 @@ public class NetworkedClient : MonoBehaviour
             Debug.Log("TicTacToe");
             int Number = int.Parse(csv[1]);
 
+            string ChangeText = "X";
+
+            if (m_Observer)
+            {
+                int Player = int.Parse(csv[2]);
+
+                if (Player == 1)
+                    ChangeText = "O";
+            }
+
             TicTacToe Tic = GameObject.Find("Canvas").GetComponent<TicTacToe>();
 
             if (Tic)
             {
-                Tic.ChangeNumber(Number);
+                Tic.ChangeNumber(Number, ChangeText);
             }
         }
 
@@ -204,6 +215,16 @@ public class NetworkedClient : MonoBehaviour
         }
 
         else if (signifier == ServerToClientSignifiers.TicTacToeLoginFailed)
+        {
+        }
+
+        else if (signifier == ServerToClientSignifiers.TicTacToeObserverLoginComplete)
+        {
+            m_Observer = true;
+            SceneManager.LoadScene("TicTacToe");
+        }
+
+        else if (signifier == ServerToClientSignifiers.TicTacToeObserverLoginFailed)
         {
         }
     }
@@ -244,4 +265,6 @@ static public class ServerToClientSignifiers
     public const int TicTacToeWin = 10;
     public const int TicTacToeLoginComplete = 11;
     public const int TicTacToeLoginFailed = 12;
+    public const int TicTacToeObserverLoginComplete = 13;
+    public const int TicTacToeObserverLoginFailed = 14;
 }
