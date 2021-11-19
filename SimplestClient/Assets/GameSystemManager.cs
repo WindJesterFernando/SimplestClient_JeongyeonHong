@@ -18,13 +18,11 @@ public class GameSystemManager : MonoBehaviour
 
     public string m_ID;
     public string m_Password;
+    public bool m_TicTacToeClick = false;
     //static GameObject instance;
 
     void Start()
     {
-
-        //instance = this.gameObject;
-
         GameObject[] allObjects = UnityEngine.Object.FindObjectsOfType<GameObject>();
 
         foreach(GameObject go in allObjects)
@@ -79,8 +77,6 @@ public class GameSystemManager : MonoBehaviour
     }
     public void ObserverToggleChanged(bool newValue)
     {
-        //Debug.Log("yoyo");
-
         observerToggle.GetComponent<Toggle>().SetIsOnWithoutNotify(!newValue);
     }
 
@@ -98,10 +94,15 @@ public class GameSystemManager : MonoBehaviour
 
     public void TicTacToeSquareButtonPressed()
     {
+        if (m_TicTacToeClick)
+            return;
+
+        m_TicTacToeClick = true;
+
         m_Password = passwordInput.GetComponent<InputField>().text;
         m_ID = userNameInput.GetComponent<InputField>().text;
 
-        Debug.Log("ID : " + m_ID + " Pass : " + m_Password);
+        Debug.Log("TicTacToe ID : " + m_ID + " Pass : " + m_Password);
 
         if (observerToggle.GetComponent<Toggle>().isOn)
             networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerSignifiers.TicTacToeObserverIn + ", " + m_ID + ", " + m_Password);

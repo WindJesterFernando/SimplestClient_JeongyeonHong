@@ -36,10 +36,6 @@ public class NetworkedClient : MonoBehaviour
                 gameSystemManager = go;
         }
 
-        m_Msg[0] = "Hello";
-        m_Msg[1] = "GG";
-        m_Msg[2] = "I have a cute cat";
-
         Connect();
 
         //StartCoroutine("UpdateNetworkConnection");
@@ -108,7 +104,6 @@ public class NetworkedClient : MonoBehaviour
                 isConnected = true;
 
                 Debug.Log("Connected, id = " + connectionID);
-                //SendMessageToHost("Hello from client");
 
             }
 
@@ -133,14 +128,6 @@ public class NetworkedClient : MonoBehaviour
 
     private void ProcessRecievedMsg(string msg, int id)
     {
-        //Debug.Log("msg recieved = " + msg + ".  connection id = " + id);
-        //if (msg != "Owner")
-        //    m_ChatText.text += id + " : " + msg + "\n";
-
-        //int Index = Random.Range(0, 3);
-
-        //SendMessageToHost(m_Msg[Index]);
-
         string[] csv = msg.Split(',');
 
         int signifier = int.Parse(csv[0]);
@@ -155,6 +142,8 @@ public class NetworkedClient : MonoBehaviour
 
         else if (signifier == ServerToClientSignifiers.LoginComplete)
         {
+            gameSystemManager.GetComponent<GameSystemManager>().m_TicTacToeClick = false;
+
             SceneManager.LoadScene("Chat");
         }
 
@@ -205,6 +194,7 @@ public class NetworkedClient : MonoBehaviour
 
         else if (signifier == ServerToClientSignifiers.TicTacToeWin)
         {
+            Debug.Log("Win");
         }
 
         else if (signifier == ServerToClientSignifiers.TicTacToeLoginComplete)
