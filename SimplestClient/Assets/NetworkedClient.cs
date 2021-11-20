@@ -206,6 +206,37 @@ public class NetworkedClient : MonoBehaviour
         else if (signifier == ServerToClientSignifiers.TicTacToeWin)
         {
             Debug.Log("Win");
+
+            TicTacToe Tic = GameObject.Find("Canvas").GetComponent<TicTacToe>();
+
+            if (Tic)
+            {
+                Tic.ReplayButtonObj.SetActive(true);
+
+                if (!m_Observer)
+                {
+                    Tic.WinText.SetActive(true);
+                    Tic.WinText.GetComponent<Text>().text = "WIN";
+                }
+            }
+        }
+
+        else if (signifier == ServerToClientSignifiers.TicTacToeLose)
+        {
+            Debug.Log("Lose");
+
+            TicTacToe Tic = GameObject.Find("Canvas").GetComponent<TicTacToe>();
+
+            if (Tic)
+            {
+                Tic.ReplayButtonObj.SetActive(true);
+
+                if (!m_Observer)
+                {
+                    Tic.WinText.SetActive(true);
+                    Tic.WinText.GetComponent<Text>().text = "LOSE";
+                }
+            }
         }
 
         else if (signifier == ServerToClientSignifiers.TicTacToeLoginComplete)
@@ -249,6 +280,7 @@ static public class ClientToServerSignifiers
     public const int TicTacToeOut = 8;
     public const int TicTacToeObserverIn = 9;
     public const int TicTacToeObserverOut = 10;
+    public const int Replay = 11;
 }
 
 static public class ServerToClientSignifiers
@@ -267,4 +299,6 @@ static public class ServerToClientSignifiers
     public const int TicTacToeLoginFailed = 12;
     public const int TicTacToeObserverLoginComplete = 13;
     public const int TicTacToeObserverLoginFailed = 14;
+    public const int TicTacToeLose = 15;
+    public const int Replay = 16;
 }
