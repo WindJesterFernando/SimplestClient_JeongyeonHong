@@ -11,6 +11,8 @@ public class TicTacToe : MonoBehaviour
     private bool Turn = false;
     private bool Observer = false;
     GameObject networkClient;
+    public GameObject ReplayButtonObj;
+    public GameObject WinText;
 
     public void SetOwner()
     {
@@ -215,5 +217,21 @@ public class TicTacToe : MonoBehaviour
         Turn = true;
 
         Debug.Log("Change Number : " + Number);
+    }
+
+    public void ReplayButton()
+    {
+        Turn = false;
+
+        for (int i = 0; i < 9; ++i)
+        {
+            TextArray[i].text = "";
+        }
+
+        string msg;
+
+        msg = ClientToServerSignifiers.Replay + "";
+
+        networkClient.GetComponent<NetworkedClient>().SendMessageToHost(msg);
     }
 }
