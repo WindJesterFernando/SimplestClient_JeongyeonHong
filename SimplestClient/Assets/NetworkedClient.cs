@@ -178,13 +178,29 @@ public class NetworkedClient : MonoBehaviour
 
                 if (Player == 1)
                     ChangeText = "O";
+
+                TicTacToe Tic = GameObject.Find("Canvas").GetComponent<TicTacToe>();
+
+                if (Tic)
+                {
+                    Tic.ChangeNumber(Number, ChangeText);
+                }
             }
 
-            TicTacToe Tic = GameObject.Find("Canvas").GetComponent<TicTacToe>();
-
-            if (Tic)
+            else
             {
-                Tic.ChangeNumber(Number, ChangeText);
+                TicTacToe Tic = GameObject.Find("Canvas").GetComponent<TicTacToe>();
+
+                if (Tic)
+                {
+                    if (Tic.Owner)
+                        ChangeText = "X";
+
+                    else
+                        ChangeText = "O";
+
+                    Tic.ChangeNumber(Number, ChangeText);
+                }
             }
         }
 
@@ -258,6 +274,31 @@ public class NetworkedClient : MonoBehaviour
         else if (signifier == ServerToClientSignifiers.TicTacToeObserverLoginFailed)
         {
         }
+
+        else if (signifier == ServerToClientSignifiers.Replay)
+        {
+            TicTacToe Tic = GameObject.Find("Canvas").GetComponent<TicTacToe>();
+
+            if (Tic)
+            {
+                int Number = int.Parse(csv[1]);
+
+                Tic.ChangeNumber(Number, csv[2]);
+            }
+        }
+
+        else if (signifier == ServerToClientSignifiers.ReplayEnd)
+        {
+            TicTacToe Tic = GameObject.Find("Canvas").GetComponent<TicTacToe>();
+
+            if (Tic)
+            {
+                Tic.ReplayEnable = false;
+                int Number = int.Parse(csv[1]);
+
+                Tic.ChangeNumber(Number, csv[2]);
+            }
+        }
     }
 
     public bool IsConnected()
@@ -301,4 +342,5 @@ static public class ServerToClientSignifiers
     public const int TicTacToeObserverLoginFailed = 14;
     public const int TicTacToeLose = 15;
     public const int Replay = 16;
+    public const int ReplayEnd = 17;
 }

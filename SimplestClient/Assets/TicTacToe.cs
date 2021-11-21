@@ -13,10 +13,15 @@ public class TicTacToe : MonoBehaviour
     GameObject networkClient;
     public GameObject ReplayButtonObj;
     public GameObject WinText;
+    public bool ReplayEnable = false;
+    public bool Owner = false;
+    public string CheckText = "X";
 
     public void SetOwner()
     {
         Turn = true;
+        Owner = true;
+        CheckText = "O";
     }
     void Start()
     {
@@ -55,7 +60,7 @@ public class TicTacToe : MonoBehaviour
         if (IsClicked[0] || !Turn)
             return;
 
-        TextArray[0].text = "O";
+        TextArray[0].text = CheckText;
         IsClicked[0] = true;
         Turn = false;
 
@@ -73,7 +78,7 @@ public class TicTacToe : MonoBehaviour
         if (IsClicked[1] || !Turn)
             return;
 
-        TextArray[1].text = "O";
+        TextArray[1].text = CheckText;
         IsClicked[1] = true;
         Turn = false;
 
@@ -91,7 +96,7 @@ public class TicTacToe : MonoBehaviour
         if (IsClicked[2] || !Turn)
             return;
 
-        TextArray[2].text = "O";
+        TextArray[2].text = CheckText;
         IsClicked[2] = true;
         Turn = false;
 
@@ -109,7 +114,7 @@ public class TicTacToe : MonoBehaviour
         if (IsClicked[3] || !Turn)
             return;
 
-        TextArray[3].text = "O";
+        TextArray[3].text = CheckText;
         IsClicked[3] = true;
         Turn = false;
 
@@ -127,7 +132,7 @@ public class TicTacToe : MonoBehaviour
         if (IsClicked[4] || !Turn)
             return;
 
-        TextArray[4].text = "O";
+        TextArray[4].text = CheckText;
         IsClicked[4] = true;
         Turn = false;
 
@@ -145,7 +150,7 @@ public class TicTacToe : MonoBehaviour
         if (IsClicked[5] || !Turn)
             return;
 
-        TextArray[5].text = "O";
+        TextArray[5].text = CheckText;
         IsClicked[5] = true;
         Turn = false;
 
@@ -163,7 +168,7 @@ public class TicTacToe : MonoBehaviour
         if (IsClicked[6] || !Turn)
             return;
 
-        TextArray[6].text = "O";
+        TextArray[6].text = CheckText;
         IsClicked[6] = true;
         Turn = false;
 
@@ -181,7 +186,7 @@ public class TicTacToe : MonoBehaviour
         if (IsClicked[7] || !Turn)
             return;
 
-        TextArray[7].text = "O";
+        TextArray[7].text = CheckText;
         IsClicked[7] = true;
         Turn = false;
 
@@ -199,7 +204,7 @@ public class TicTacToe : MonoBehaviour
         if (IsClicked[8] || !Turn)
             return;
 
-        TextArray[8].text = "O";
+        TextArray[8].text = CheckText;
         IsClicked[8] = true;
         Turn = false;
 
@@ -221,6 +226,11 @@ public class TicTacToe : MonoBehaviour
 
     public void ReplayButton()
     {
+        if (ReplayEnable)
+            return;
+
+        ReplayEnable = true;
+
         Turn = false;
 
         for (int i = 0; i < 9; ++i)
