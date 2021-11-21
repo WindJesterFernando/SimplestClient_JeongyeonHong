@@ -13,6 +13,8 @@ ScriptsOnlyBuild:
     - UnityEditor.U2D.IK.IKEditorManagerHelper
     Unity.2D.Tilemap.Editor.dll:
     - UnityEditor.Tilemaps.GridPaintingState
+    - UnityEditor.Tilemaps.GridPaletteBrushes
+    - UnityEditor.Tilemaps.GridPalettes
     - UnityEditor.Tilemaps.SceneViewGridManager
     - UnityEditor.Tilemaps.SceneViewOpenTilePaletteHelper
     - UnityEditor.Tilemaps.TileDragAndDropManager
@@ -521,7 +523,7 @@ ScriptsOnlyBuild:
     className: BaseInput
   - hash:
       serializedVersion: 2
-      Hash: 0cae64f8f25f6994db026611bb46ebb1
+      Hash: 373eec5a8e2f5721691b34f1957e61e4
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: TicTacToe
