@@ -17,6 +17,8 @@ public class TicTacToe : MonoBehaviour
     public bool Owner = false;
     public string CheckText = "X";
 
+    LinkedList<GameObject> ticTacToeButtons;
+
     public void SetOwner()
     {
         Turn = true;
@@ -25,10 +27,12 @@ public class TicTacToe : MonoBehaviour
     }
     void Start()
     {
-        for(int i = 0;i < 9; ++i)
+        for (int i = 0; i < 9; ++i)
         {
             IsClicked[i] = false;
         }
+
+        ticTacToeButtons = new LinkedList<GameObject>();
 
         GameObject[] allObjects = UnityEngine.Object.FindObjectsOfType<GameObject>();
 
@@ -41,179 +45,243 @@ public class TicTacToe : MonoBehaviour
                 networkClient.GetComponent<NetworkedClient>().m_TicTacToe = this;
                 break;
             }
+            else if (go.name == "Button")
+                ticTacToeButtons.AddLast(go);
+            else if (go.name == "Button (1)")
+                ticTacToeButtons.AddLast(go);
+            else if (go.name == "Button (2)")
+                ticTacToeButtons.AddLast(go);
+            else if (go.name == "Button (3)")
+                ticTacToeButtons.AddLast(go);
+            else if (go.name == "Button (4)")
+                ticTacToeButtons.AddLast(go);
+            else if (go.name == "Button (5)")
+                ticTacToeButtons.AddLast(go);
+            else if (go.name == "Button (6)")
+                ticTacToeButtons.AddLast(go);
+            else if (go.name == "Button (7)")
+                ticTacToeButtons.AddLast(go);
+            else if (go.name == "Button (8)")
+                ticTacToeButtons.AddLast(go);
         }
 
         Observer = networkClient.GetComponent<NetworkedClient>().m_Observer;
+
+
+        foreach (GameObject btn in ticTacToeButtons)
+            btn.GetComponent<Button>().onClick.AddListener(delegate { TicTacToeButtonClick(btn); });
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
-    public void Button1Click()
+    // public void Button1Click()
+    // {
+    //     if (Observer)
+    //         return;
+
+    //     if (IsClicked[0] || !Turn)
+    //         return;
+
+    //     TextArray[0].text = CheckText;
+    //     IsClicked[0] = true;
+    //     Turn = false;
+
+    //     string msg;
+
+    //     msg = ClientToServerSignifiers.TicTacToeSomethingPlay + ", 0";
+
+    //     networkClient.GetComponent<NetworkedClient>().SendMessageToHost(msg);
+    // }
+    // public void Button2Click()
+    // {
+    //     if (Observer)
+    //         return;
+
+    //     if (IsClicked[1] || !Turn)
+    //         return;
+
+    //     TextArray[1].text = CheckText;
+    //     IsClicked[1] = true;
+    //     Turn = false;
+
+    //     string msg;
+
+    //     msg = ClientToServerSignifiers.TicTacToeSomethingPlay + ", 1";
+
+    //     networkClient.GetComponent<NetworkedClient>().SendMessageToHost(msg);
+    // }
+    // public void Button3Click()
+    // {
+    //     if (Observer)
+    //         return;
+
+    //     if (IsClicked[2] || !Turn)
+    //         return;
+
+    //     TextArray[2].text = CheckText;
+    //     IsClicked[2] = true;
+    //     Turn = false;
+
+    //     string msg;
+
+    //     msg = ClientToServerSignifiers.TicTacToeSomethingPlay + ", 2";
+
+    //     networkClient.GetComponent<NetworkedClient>().SendMessageToHost(msg);
+    // }
+    // public void Button4Click()
+    // {
+    //     if (Observer)
+    //         return;
+
+    //     if (IsClicked[3] || !Turn)
+    //         return;
+
+    //     TextArray[3].text = CheckText;
+    //     IsClicked[3] = true;
+    //     Turn = false;
+
+    //     string msg;
+
+    //     msg = ClientToServerSignifiers.TicTacToeSomethingPlay + ", 3";
+
+    //     networkClient.GetComponent<NetworkedClient>().SendMessageToHost(msg);
+    // }
+    // public void Button5Click()
+    // {
+    //     if (Observer)
+    //         return;
+
+    //     if (IsClicked[4] || !Turn)
+    //         return;
+
+    //     TextArray[4].text = CheckText;
+    //     IsClicked[4] = true;
+    //     Turn = false;
+
+    //     string msg;
+
+    //     msg = ClientToServerSignifiers.TicTacToeSomethingPlay + ", 4";
+
+    //     networkClient.GetComponent<NetworkedClient>().SendMessageToHost(msg);
+    // }
+    // public void Button6Click()
+    // {
+    //     if (Observer)
+    //         return;
+
+    //     if (IsClicked[5] || !Turn)
+    //         return;
+
+    //     TextArray[5].text = CheckText;
+    //     IsClicked[5] = true;
+    //     Turn = false;
+
+    //     string msg;
+
+    //     msg = ClientToServerSignifiers.TicTacToeSomethingPlay + ", 5";
+
+    //     networkClient.GetComponent<NetworkedClient>().SendMessageToHost(msg);
+    // }
+    // public void Button7Click()
+    // {
+    //     if (Observer)
+    //         return;
+
+    //     if (IsClicked[6] || !Turn)
+    //         return;
+
+    //     TextArray[6].text = CheckText;
+    //     IsClicked[6] = true;
+    //     Turn = false;
+
+    //     string msg;
+
+    //     msg = ClientToServerSignifiers.TicTacToeSomethingPlay + ", 6";
+
+    //     networkClient.GetComponent<NetworkedClient>().SendMessageToHost(msg);
+    // }
+    // public void Button8Click()
+    // {
+    //     if (Observer)
+    //         return;
+
+    //     if (IsClicked[7] || !Turn)
+    //         return;
+
+    //     TextArray[7].text = CheckText;
+    //     IsClicked[7] = true;
+    //     Turn = false;
+
+    //     string msg;
+
+    //     msg = ClientToServerSignifiers.TicTacToeSomethingPlay + ", 7";
+
+    //     networkClient.GetComponent<NetworkedClient>().SendMessageToHost(msg);
+    // }
+    // public void Button9Click()
+    // {
+    //     if (Observer)
+    //         return;
+
+    //     if (IsClicked[8] || !Turn)
+    //         return;
+
+    //     TextArray[8].text = CheckText;
+    //     IsClicked[8] = true;
+    //     Turn = false;
+
+    //     string msg;
+
+    //     msg = ClientToServerSignifiers.TicTacToeSomethingPlay + ", 8";
+
+    //     networkClient.GetComponent<NetworkedClient>().SendMessageToHost(msg);
+    // }
+
+    public void TicTacToeButtonClick(GameObject Sender)
     {
+        int btnIndex = 0;
+
+        if (Sender.name == "Button")
+            btnIndex = 0;
+        else if (Sender.name == "Button (1)")
+            btnIndex = 1;
+        else if (Sender.name == "Button (2)")
+            btnIndex = 2;
+        else if (Sender.name == "Button (3)")
+            btnIndex = 3;
+        else if (Sender.name == "Button (4)")
+            btnIndex = 4;
+        else if (Sender.name == "Button (5)")
+            btnIndex = 5;
+        else if (Sender.name == "Button (6)")
+            btnIndex = 6;
+        else if (Sender.name == "Button (7)")
+            btnIndex = 7;
+        else if (Sender.name == "Button (8)")
+            btnIndex = 8;
+
         if (Observer)
             return;
 
-        if (IsClicked[0] || !Turn)
+        if (IsClicked[btnIndex] || !Turn)
             return;
 
-        TextArray[0].text = CheckText;
-        IsClicked[0] = true;
+        TextArray[btnIndex].text = CheckText;
+        IsClicked[btnIndex] = true;
         Turn = false;
 
         string msg;
 
-        msg = ClientToServerSignifiers.TicTacToeSomethingPlay + ", 0";
+        msg = ClientToServerSignifiers.TicTacToeSomethingPlay + ", " + btnIndex;
 
         networkClient.GetComponent<NetworkedClient>().SendMessageToHost(msg);
     }
-    public void Button2Click()
-    {
-        if (Observer)
-            return;
 
-        if (IsClicked[1] || !Turn)
-            return;
 
-        TextArray[1].text = CheckText;
-        IsClicked[1] = true;
-        Turn = false;
-
-        string msg;
-
-        msg = ClientToServerSignifiers.TicTacToeSomethingPlay + ", 1";
-
-        networkClient.GetComponent<NetworkedClient>().SendMessageToHost(msg);
-    }
-    public void Button3Click()
-    {
-        if (Observer)
-            return;
-
-        if (IsClicked[2] || !Turn)
-            return;
-
-        TextArray[2].text = CheckText;
-        IsClicked[2] = true;
-        Turn = false;
-
-        string msg;
-        
-        msg = ClientToServerSignifiers.TicTacToeSomethingPlay + ", 2";
-
-        networkClient.GetComponent<NetworkedClient>().SendMessageToHost(msg);
-    }
-    public void Button4Click()
-    {
-        if (Observer)
-            return;
-
-        if (IsClicked[3] || !Turn)
-            return;
-
-        TextArray[3].text = CheckText;
-        IsClicked[3] = true;
-        Turn = false;
-
-        string msg;
-
-        msg = ClientToServerSignifiers.TicTacToeSomethingPlay + ", 3";
-
-        networkClient.GetComponent<NetworkedClient>().SendMessageToHost(msg);
-    }
-    public void Button5Click()
-    {
-        if (Observer)
-            return;
-
-        if (IsClicked[4] || !Turn)
-            return;
-
-        TextArray[4].text = CheckText;
-        IsClicked[4] = true;
-        Turn = false;
-
-        string msg;
-
-        msg = ClientToServerSignifiers.TicTacToeSomethingPlay + ", 4";
-
-        networkClient.GetComponent<NetworkedClient>().SendMessageToHost(msg);
-    }
-    public void Button6Click()
-    {
-        if (Observer)
-            return;
-
-        if (IsClicked[5] || !Turn)
-            return;
-
-        TextArray[5].text = CheckText;
-        IsClicked[5] = true;
-        Turn = false;
-
-        string msg;
-
-        msg = ClientToServerSignifiers.TicTacToeSomethingPlay + ", 5";
-
-        networkClient.GetComponent<NetworkedClient>().SendMessageToHost(msg);
-    }
-    public void Button7Click()
-    {
-        if (Observer)
-            return;
-
-        if (IsClicked[6] || !Turn)
-            return;
-
-        TextArray[6].text = CheckText;
-        IsClicked[6] = true;
-        Turn = false;
-
-        string msg;
-
-        msg = ClientToServerSignifiers.TicTacToeSomethingPlay + ", 6";
-
-        networkClient.GetComponent<NetworkedClient>().SendMessageToHost(msg);
-    }
-    public void Button8Click()
-    {
-        if (Observer)
-            return;
-
-        if (IsClicked[7] || !Turn)
-            return;
-
-        TextArray[7].text = CheckText;
-        IsClicked[7] = true;
-        Turn = false;
-
-        string msg;
-
-        msg = ClientToServerSignifiers.TicTacToeSomethingPlay + ", 7";
-
-        networkClient.GetComponent<NetworkedClient>().SendMessageToHost(msg);
-    }
-    public void Button9Click()
-    {
-        if (Observer)
-            return;
-
-        if (IsClicked[8] || !Turn)
-            return;
-
-        TextArray[8].text = CheckText;
-        IsClicked[8] = true;
-        Turn = false;
-
-        string msg;
-
-        msg = ClientToServerSignifiers.TicTacToeSomethingPlay + ", 8";
-
-        networkClient.GetComponent<NetworkedClient>().SendMessageToHost(msg);
-    }
 
     public void ChangeNumber(int Number, string changeText)
     {

@@ -186,7 +186,6 @@ public class NetworkedClient : MonoBehaviour
                     Tic.ChangeNumber(Number, ChangeText);
                 }
             }
-
             else
             {
                 TicTacToe Tic = GameObject.Find("Canvas").GetComponent<TicTacToe>();
