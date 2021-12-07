@@ -47,7 +47,7 @@ public class GameSystemManager : MonoBehaviour
                 observerToggle = go;
         }
 
-        submitButton.GetComponent<Button>().onClick.AddListener(SubmitButtonPressed);
+        submitButton.GetComponent<Button>().onClick.AddListener(CreateAccountButtonPressed);
 
         observerToggle.GetComponent<Toggle>().onValueChanged.AddListener(ObserverToggleChanged);
 
@@ -63,14 +63,14 @@ public class GameSystemManager : MonoBehaviour
         
     }
 
-    public void SubmitButtonPressed()
+    public void CreateAccountButtonPressed()
     {
         m_Password = passwordInput.GetComponent<InputField>().text;
         m_ID = userNameInput.GetComponent<InputField>().text;
 
         string msg;
 
-        msg = ClientToServerSignifiers.CreateAccount + ", " + m_ID + ", " + m_Password;
+        msg = ClientToServerSignifiers.CreateAccount + "," + m_ID + "," + m_Password;
 
         networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(msg);
         Debug.Log(msg);
@@ -89,10 +89,9 @@ public class GameSystemManager : MonoBehaviour
         m_ID = userNameInput.GetComponent<InputField>().text;
 
         if (observerToggle.GetComponent<Toggle>().isOn)
-            networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerSignifiers.ObserverLogin + ", " + m_ID + ", " + m_Password);
-
+            networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerSignifiers.ObserverLogin + "," + m_ID + "," + m_Password);
         else
-            networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerSignifiers.Login + ", " + m_ID + ", " + m_Password);
+            networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerSignifiers.Login + "," + m_ID + "," + m_Password);
     }
 
     public void TicTacToeSquareButtonPressed()
@@ -108,9 +107,9 @@ public class GameSystemManager : MonoBehaviour
         Debug.Log("TicTacToe ID : " + m_ID + " Pass : " + m_Password);
 
         if (observerToggle.GetComponent<Toggle>().isOn)
-            networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerSignifiers.TicTacToeObserverIn + ", " + m_ID + ", " + m_Password);
+            networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerSignifiers.TicTacToeObserverIn + "," + m_ID + "," + m_Password);
 
         else
-            networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerSignifiers.TicTacToeIn + ", " + m_ID + ", " + m_Password);
+            networkedClient.GetComponent<NetworkedClient>().SendMessageToHost(ClientToServerSignifiers.TicTacToeIn + "," + m_ID + "," + m_Password);
     }
 }

@@ -1610,7 +1610,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Submit
+  m_Text: Create Account
 --- !u!222 &1596992201
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1650,6 +1650,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_ChatText: {fileID: 0}
   m_TicTacToe: {fileID: 0}
+  m_Observer: 0
 --- !u!4 &1658387519
 Transform:
   m_ObjectHideFlags: 0
